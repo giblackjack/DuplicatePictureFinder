@@ -7,6 +7,8 @@ package duplicatepicturefinder;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.swing.*;
+import java.swing.event.*;
 
 /**
  *
@@ -14,8 +16,10 @@ import java.awt.event.*;
  */
 public class GUI {
     Frame F1;
-    FileDialog chooser;
+    //FileDialog chooser;
+    JFileChooser JFolderDialog;
     WindowAdapter myWindowAdapter;
+    String baseDirectory;
     
     public GUI() {
         //construct needed objects
@@ -35,9 +39,16 @@ public class GUI {
         F1.pack();
         F1.setVisible(true);
         
-        chooser = new FileDialog(F1,"Choose a Folder",FileDialog.LOAD);
-        chooser.setVisible(true);
-        String dir = chooser.getDirectory();
+        //chooser = new FileDialog(F1,"Choose a Folder",FileDialog.LOAD);
+        //chooser.setVisible(true);
+        //String dir = chooser.getDirectory();
+        JFolderDialog = new JFileChooser();
+        JFolderDialog.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        int returnVal = JFolderDialog.showOpenDialog(F1);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            baseDirectory = JFolderDialog.getSelectedFile().getName();
+        }
+        
         F1.add(new Label(dir));
         F1.pack();
     }
