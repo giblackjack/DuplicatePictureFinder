@@ -7,19 +7,21 @@ package duplicatepicturefinder;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.swing.*;
-import java.swing.event.*;
+import java.io.IOException;
+import javax.swing.*;
+import javax.swing.event.*;
 
 /**
  *
  * @author STIVY
  */
 public class GUI {
-    Frame F1;
-    //FileDialog chooser;
+    JFrame F1;
     JFileChooser JFolderDialog;
+    
+    
     WindowAdapter myWindowAdapter;
-    String baseDirectory;
+    public String baseDirectory;
     
     public GUI() {
         //construct needed objects
@@ -33,25 +35,33 @@ public class GUI {
     }
     //setup main window and show window
     public void show(){
-        this.F1 = new Frame("test frame");
-        F1.add(new Label("Hello World!"));
+        this.F1 = new JFrame("Duplicate File Finder");
+        F1.setSize(600, 600);
         F1.addWindowListener(myWindowAdapter);
         F1.pack();
         F1.setVisible(true);
+        getBaseDirectory();
         
-        //chooser = new FileDialog(F1,"Choose a Folder",FileDialog.LOAD);
-        //chooser.setVisible(true);
-        //String dir = chooser.getDirectory();
+        
+        
+        F1.add(new Label(baseDirectory));
+        F1.pack();
+    }
+    
+    private void getBaseDirectory(){
         JFolderDialog = new JFileChooser();
         JFolderDialog.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         int returnVal = JFolderDialog.showOpenDialog(F1);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
-            baseDirectory = JFolderDialog.getSelectedFile().getName();
+            try {
+                baseDirectory = JFolderDialog.getSelectedFile().getCanonicalPath();
+            }
+            catch (IOException e){
+                System.err.print(e);
+                System.exit(1);
+            }
         }
-        
-        F1.add(new Label(dir));
-        F1.pack();
-    }
     
+    }
     
 }
