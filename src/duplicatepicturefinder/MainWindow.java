@@ -6,6 +6,7 @@
 package duplicatepicturefinder;
 
 import java.io.IOException;
+import java.util.HashSet;
 import javax.swing.JFileChooser;
 
 /**
@@ -16,6 +17,7 @@ public class MainWindow extends javax.swing.JFrame {
 
     
     public String BaseDirectory;
+    DuplicatePictureFinder appEngine = new DuplicatePictureFinder();
     /**
      * Creates new form MainWindow
      */
@@ -69,6 +71,11 @@ public class MainWindow extends javax.swing.JFrame {
         jTextFieldDirectory.setText("Select directory");
 
         jButtonSelectDirectory.setText("Select Dir");
+        jButtonSelectDirectory.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonSelectDirectoryActionPerformed(evt);
+            }
+        });
 
         jCheckBoxSubfolders.setText("include subfolders");
         jCheckBoxSubfolders.addActionListener(new java.awt.event.ActionListener() {
@@ -85,6 +92,11 @@ public class MainWindow extends javax.swing.JFrame {
         });
 
         jButtonQuickSearch.setText("Quick Search");
+        jButtonQuickSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonQuickSearchActionPerformed(evt);
+            }
+        });
 
         jButtonDeepSearch.setText("Deep Search");
 
@@ -150,12 +162,24 @@ public class MainWindow extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jCheckBoxSubfoldersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxSubfoldersActionPerformed
-        // TODO add your handling code here:
+        appEngine.setVisitSubDir(jCheckBoxSubfolders.isSelected());
+        System.out.println(jCheckBoxSubfolders.isSelected());
     }//GEN-LAST:event_jCheckBoxSubfoldersActionPerformed
 
     private void jComboBoxFileFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxFileFilterActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jComboBoxFileFilterActionPerformed
+
+    private void jButtonQuickSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonQuickSearchActionPerformed
+        appEngine.quickSearchDirectory();
+        
+    }//GEN-LAST:event_jButtonQuickSearchActionPerformed
+
+    private void jButtonSelectDirectoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSelectDirectoryActionPerformed
+        BaseDirectory = getBaseDirectory();
+        jTextFieldDirectory.setText(BaseDirectory);
+        appEngine.setBaseDir(BaseDirectory);
+    }//GEN-LAST:event_jButtonSelectDirectoryActionPerformed
 
     /**
      * @param args the command line arguments
@@ -183,7 +207,7 @@ public class MainWindow extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(MainWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-        DuplicatePictureFinder appEngine = new DuplicatePictureFinder();
+        
         
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {

@@ -6,6 +6,13 @@
 package duplicatepicturefinder;
 
 import java.io.IOException;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.LinkOption;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.logging.FileHandler;
@@ -32,7 +39,7 @@ public class DuplicatePictureFinder {
      */
     private static final String logDir = "C:\\Users\\STIVY\\Desktop\\log.txt";
     private static FileHandler logFileHandler;
-    private static final Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+    private Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
     private SimpleFormatter fmtr;
     
     public DuplicatePictureFinder(){
@@ -47,11 +54,29 @@ public class DuplicatePictureFinder {
     }
     
     private void setupLogger() throws IOException{
-        Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-        logger.setLevel(Level.ALL);
+        LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+        LOGGER.setLevel(Level.ALL);
         logFileHandler = new FileHandler(logDir);
         logFileHandler.setFormatter(fmtr);
-        logger.addHandler(logFileHandler);
+        LOGGER.addHandler(logFileHandler);
+    }
+    
+    public void quickSearchDirectory(){
+        if (!baseDir.isEmpty() && Files.exists(Paths.get(baseDir), LinkOption.NOFOLLOW_LINKS)){
+            try {
+                Path baseDirPath = Paths.get(baseDir);
+                Files.walkFileTree(baseDirPath, new SimpleFileVisitor<Path>(){
+                    @Override
+                    public FileVisitResult visitFile(Path file, BasicFileAttributes attrs){
+                        //TODO: populate application logic
+                        System.out.println(file.toString());
+                        return FileVisitResult.CONTINUE;
+                    }
+                });
+            } catch (IOException ex) {
+                Logger.getLogger(DuplicatePictureFinder.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } 
     }
     
     public boolean isVisitSubDir() {
