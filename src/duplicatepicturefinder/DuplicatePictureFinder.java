@@ -13,6 +13,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.logging.FileHandler;
@@ -33,6 +34,7 @@ public class DuplicatePictureFinder {
     String baseDir;
     LinkedList LLFiles;
     HashMap HMFiles;
+    ArrayList<String> FileExt;
     
     /**
      * Variables for use by logger
@@ -49,8 +51,10 @@ public class DuplicatePictureFinder {
         } catch (IOException ex) {
             Logger.getLogger(DuplicatePictureFinder.class.getName()).log(Level.SEVERE, null, ex);
         }
-        //LOGGER.severe("testing");
-        
+        FileExt = new ArrayList();
+        FileExt.add(".jpg");
+        FileExt.add(".jpeg");
+        FileExt.add(".png");
     }
     
     private void setupLogger() throws IOException{
@@ -69,7 +73,12 @@ public class DuplicatePictureFinder {
                     @Override
                     public FileVisitResult visitFile(Path file, BasicFileAttributes attrs){
                         //TODO: populate application logic
-                        System.out.println(file.toString());
+                        for (String ext : FileExt){
+                            if(file.toString().toLowerCase().endsWith(ext)){
+                                printMsg(file.getName(file.getNameCount()-1).toString());
+                                break;
+                            }
+                        }
                         return FileVisitResult.CONTINUE;
                     }
                 });
@@ -77,6 +86,10 @@ public class DuplicatePictureFinder {
                 Logger.getLogger(DuplicatePictureFinder.class.getName()).log(Level.SEVERE, null, ex);
             }
         } 
+    }
+    
+    public void printMsg(String arg){
+        System.out.println(arg);
     }
     
     public boolean isVisitSubDir() {
