@@ -33,7 +33,7 @@ public class DuplicatePictureFinder {
     boolean visitSubDir = false;
     String baseDir;
     LinkedList LLFiles;
-    HashMap HMFiles;
+    HashMap<String, ArrayList<String>> HMFiles;
     ArrayList<String> FileExt;
     
     /**
@@ -55,6 +55,8 @@ public class DuplicatePictureFinder {
         FileExt.add(".jpg");
         FileExt.add(".jpeg");
         FileExt.add(".png");
+        LLFiles = new LinkedList();
+        HMFiles = new HashMap<>();
     }
     
     private void setupLogger() throws IOException{
@@ -75,7 +77,7 @@ public class DuplicatePictureFinder {
                         //TODO: populate application logic
                         for (String ext : FileExt){
                             if(file.toString().toLowerCase().endsWith(ext)){
-                                printMsg(file.getName(file.getNameCount()-1).toString());
+                                HMFileAdd(file.getName(file.getNameCount()-1).toString(), file.toString());
                                 break;
                             }
                         }
@@ -88,8 +90,15 @@ public class DuplicatePictureFinder {
         } 
     }
     
-    public void printMsg(String arg){
-        System.out.println(arg);
+    public void HMFileAdd(String key, String value){
+        if(HMFiles.containsKey(key)){
+            HMFiles.get(key).add(value);
+        } else {
+            ArrayList<String> temp = new ArrayList<>();
+            temp.add(value);
+            HMFiles.put(key, temp);
+        }
+        System.out.println(key + " - " + value);
     }
     
     public boolean isVisitSubDir() {
