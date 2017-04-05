@@ -14,6 +14,7 @@ import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.logging.FileHandler;
@@ -43,14 +44,16 @@ public class DuplicatePictureFinder {
     private static FileHandler logFileHandler;
     private Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
     private SimpleFormatter fmtr;
+    private duplicatepicturefinder.MainWindow parentContainer;
     
-    public DuplicatePictureFinder(){
+    public DuplicatePictureFinder(duplicatepicturefinder.MainWindow parent){
         this.fmtr = new SimpleFormatter();
         try {
             setupLogger();
         } catch (IOException ex) {
             Logger.getLogger(DuplicatePictureFinder.class.getName()).log(Level.SEVERE, null, ex);
         }
+        parentContainer = parent;
         FileExt = new ArrayList();
         FileExt.add(".jpg");
         FileExt.add(".jpeg");
@@ -74,7 +77,9 @@ public class DuplicatePictureFinder {
                 Files.walkFileTree(baseDirPath, new SimpleFileVisitor<Path>(){
                     @Override
                     public FileVisitResult visitFile(Path file, BasicFileAttributes attrs){
-                        //TODO: populate application logic
+                        //TODO: add in option to include/exclude subdirectories - possible?
+                        //TODO: implement deep search functionality into code, refactor to change function name to reflect
+                        //TODO: add in code to skip hidden files
                         for (String ext : FileExt){
                             if(file.toString().toLowerCase().endsWith(ext)){
                                 HMFileAdd(file.getName(file.getNameCount()-1).toString(), file.toString());
@@ -87,6 +92,7 @@ public class DuplicatePictureFinder {
             } catch (IOException ex) {
                 Logger.getLogger(DuplicatePictureFinder.class.getName()).log(Level.SEVERE, null, ex);
             }
+            sendResults();
         } 
     }
     
@@ -98,7 +104,10 @@ public class DuplicatePictureFinder {
             temp.add(value);
             HMFiles.put(key, temp);
         }
-        System.out.println(key + " - " + value);
+    }
+    
+    public void sendResults(){
+        //TODO: filter out single images and only send list of duplicates to the gui for display
     }
     
     public boolean isVisitSubDir() {

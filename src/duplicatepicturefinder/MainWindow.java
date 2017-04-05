@@ -6,7 +6,12 @@
 package duplicatepicturefinder;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFileChooser;
 
 /**
@@ -17,7 +22,7 @@ public class MainWindow extends javax.swing.JFrame {
 
     
     public String BaseDirectory;
-    DuplicatePictureFinder appEngine = new DuplicatePictureFinder();
+    DuplicatePictureFinder appEngine = new DuplicatePictureFinder(this);
     /**
      * Creates new form MainWindow
      */
@@ -39,6 +44,7 @@ public class MainWindow extends javax.swing.JFrame {
         jButtonMoveFiles = new javax.swing.JButton();
         jButtonDeleteFiles = new javax.swing.JButton();
         jScrollPaneSearchResults = new javax.swing.JScrollPane();
+        jPanelResultView = new javax.swing.JPanel();
         jSeparator1 = new javax.swing.JSeparator();
         jTextFieldDirectory = new javax.swing.JTextField();
         jButtonSelectDirectory = new javax.swing.JButton();
@@ -67,6 +73,19 @@ public class MainWindow extends javax.swing.JFrame {
         jButtonDeleteFiles.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButtonDeleteFiles.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jToolBar1.add(jButtonDeleteFiles);
+
+        javax.swing.GroupLayout jPanelResultViewLayout = new javax.swing.GroupLayout(jPanelResultView);
+        jPanelResultView.setLayout(jPanelResultViewLayout);
+        jPanelResultViewLayout.setHorizontalGroup(
+            jPanelResultViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 429, Short.MAX_VALUE)
+        );
+        jPanelResultViewLayout.setVerticalGroup(
+            jPanelResultViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 161, Short.MAX_VALUE)
+        );
+
+        jScrollPaneSearchResults.setViewportView(jPanelResultView);
 
         jTextFieldDirectory.setText("Select directory");
 
@@ -234,6 +253,21 @@ public class MainWindow extends javax.swing.JFrame {
         }
         return result;
     }
+    
+    public void DisplayResult(Collection<ArrayList<String>> fileNames){
+        //TODO: Figure out how to resize images to display appropriately
+        //TODO: iterate through collection and display results
+        String name = "c:\\Users\\STIVY\\Pictures\\2008\\06\\img031.jpg";
+        //for (String name : fileNames){
+            JButton tempButton = new JButton(name, new ImageIcon(name));
+            tempButton.setSize(200, 200);
+            jPanelResultView.add(tempButton);
+            jPanelResultView.revalidate();
+            jPanelResultView.repaint();
+            System.out.println("temp button added");
+        //}
+        
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonDeepSearch;
@@ -246,6 +280,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenu jMenuHelp;
     private javax.swing.JMenu jMenuOptions;
+    private javax.swing.JPanel jPanelResultView;
     private javax.swing.JProgressBar jProgressBar1;
     private javax.swing.JScrollPane jScrollPaneSearchResults;
     private javax.swing.JSeparator jSeparator1;
