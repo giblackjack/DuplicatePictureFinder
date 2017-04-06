@@ -5,6 +5,8 @@
  */
 package duplicatepicturefinder;
 
+import java.awt.FlowLayout;
+import java.awt.Image;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,6 +15,7 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
+import javax.swing.SwingConstants;
 
 /**
  *
@@ -23,11 +26,14 @@ public class MainWindow extends javax.swing.JFrame {
     
     public String BaseDirectory;
     DuplicatePictureFinder appEngine = new DuplicatePictureFinder(this);
+    private int RESULT_SIZE_X = 200;
+    private int RESULT_SIZE_Y = 200;
     /**
      * Creates new form MainWindow
      */
     public MainWindow() {
         initComponents();
+        jPanelResultView.setLayout(new FlowLayout());
     }
 
     /**
@@ -43,8 +49,6 @@ public class MainWindow extends javax.swing.JFrame {
         jProgressBar1 = new javax.swing.JProgressBar();
         jButtonMoveFiles = new javax.swing.JButton();
         jButtonDeleteFiles = new javax.swing.JButton();
-        jScrollPaneSearchResults = new javax.swing.JScrollPane();
-        jPanelResultView = new javax.swing.JPanel();
         jSeparator1 = new javax.swing.JSeparator();
         jTextFieldDirectory = new javax.swing.JTextField();
         jButtonSelectDirectory = new javax.swing.JButton();
@@ -52,11 +56,15 @@ public class MainWindow extends javax.swing.JFrame {
         jComboBoxFileFilter = new javax.swing.JComboBox<>();
         jButtonQuickSearch = new javax.swing.JButton();
         jButtonDeepSearch = new javax.swing.JButton();
+        jScrollPaneResults = new javax.swing.JScrollPane();
+        jPanelResultView = new javax.swing.JPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenuOptions = new javax.swing.JMenu();
         jMenuHelp = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Duplicate Image Finder");
+        setPreferredSize(new java.awt.Dimension(500, 500));
 
         jToolBar1.setFloatable(false);
         jToolBar1.setRollover(true);
@@ -73,19 +81,6 @@ public class MainWindow extends javax.swing.JFrame {
         jButtonDeleteFiles.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButtonDeleteFiles.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jToolBar1.add(jButtonDeleteFiles);
-
-        javax.swing.GroupLayout jPanelResultViewLayout = new javax.swing.GroupLayout(jPanelResultView);
-        jPanelResultView.setLayout(jPanelResultViewLayout);
-        jPanelResultViewLayout.setHorizontalGroup(
-            jPanelResultViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 429, Short.MAX_VALUE)
-        );
-        jPanelResultViewLayout.setVerticalGroup(
-            jPanelResultViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 161, Short.MAX_VALUE)
-        );
-
-        jScrollPaneSearchResults.setViewportView(jPanelResultView);
 
         jTextFieldDirectory.setText("Select directory");
 
@@ -119,6 +114,21 @@ public class MainWindow extends javax.swing.JFrame {
 
         jButtonDeepSearch.setText("Deep Search");
 
+        jScrollPaneResults.setDoubleBuffered(true);
+
+        javax.swing.GroupLayout jPanelResultViewLayout = new javax.swing.GroupLayout(jPanelResultView);
+        jPanelResultView.setLayout(jPanelResultViewLayout);
+        jPanelResultViewLayout.setHorizontalGroup(
+            jPanelResultViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 478, Short.MAX_VALUE)
+        );
+        jPanelResultViewLayout.setVerticalGroup(
+            jPanelResultViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 361, Short.MAX_VALUE)
+        );
+
+        jScrollPaneResults.setViewportView(jPanelResultView);
+
         jMenuOptions.setText("Options");
         jMenuBar1.add(jMenuOptions);
 
@@ -138,6 +148,7 @@ public class MainWindow extends javax.swing.JFrame {
                     .addComponent(jSeparator1)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPaneResults)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                     .addComponent(jComboBoxFileFilter, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -152,8 +163,7 @@ public class MainWindow extends javax.swing.JFrame {
                                         .addComponent(jButtonQuickSearch)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(jButtonDeepSearch)))
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addComponent(jScrollPaneSearchResults, javax.swing.GroupLayout.Alignment.TRAILING))
+                                .addGap(0, 0, Short.MAX_VALUE)))
                         .addContainerGap())))
         );
         layout.setVerticalGroup(
@@ -172,7 +182,7 @@ public class MainWindow extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPaneSearchResults, javax.swing.GroupLayout.DEFAULT_SIZE, 163, Short.MAX_VALUE)
+                .addComponent(jScrollPaneResults)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -229,10 +239,8 @@ public class MainWindow extends javax.swing.JFrame {
         
         
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new MainWindow().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new MainWindow().setVisible(true);
         });
     }
     
@@ -255,18 +263,29 @@ public class MainWindow extends javax.swing.JFrame {
     }
     
     public void DisplayResult(Collection<ArrayList<String>> fileNames){
-        //TODO: Figure out how to resize images to display appropriately
-        //TODO: iterate through collection and display results
-        String name = "c:\\Users\\STIVY\\Pictures\\2008\\06\\img031.jpg";
-        //for (String name : fileNames){
-            JButton tempButton = new JButton(name, new ImageIcon(name));
-            tempButton.setSize(200, 200);
-            jPanelResultView.add(tempButton);
-            jPanelResultView.revalidate();
-            jPanelResultView.repaint();
-            System.out.println("temp button added");
-        //}
-        
+        //TODO: add in user functionality to set size of results (button size)
+        for (ArrayList<String> fileSet : fileNames){
+            System.out.println(fileSet.size());
+            if(fileSet.size() == 1) continue;
+            for (String name : fileSet){
+                System.out.println(name);
+                ImageIcon tmpIcon = new ImageIcon(name);
+                Image bigImg = tmpIcon.getImage();
+                Image smlImg = bigImg.getScaledInstance((int) (0.9 * RESULT_SIZE_X), (int) (0.9 * RESULT_SIZE_Y), java.awt.Image.SCALE_SMOOTH);
+                tmpIcon.setImage(smlImg);
+                JButton tempButton = new JButton(tmpIcon);
+                tempButton.setIcon(tmpIcon);
+                tempButton.setSize(RESULT_SIZE_X, RESULT_SIZE_Y);
+                tempButton.setToolTipText(name);
+                jPanelResultView.add(tempButton);
+            }
+        }
+        //TODO: need to figure out how to get the program to start a second and subsequent lines of results
+        /*for(int i = 0; i < 20; i++){
+            jPanelResultView.add(new JButton(String.valueOf(i)));
+        }*/
+        jPanelResultView.revalidate();
+        jPanelResultView.repaint();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -282,7 +301,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JMenu jMenuOptions;
     private javax.swing.JPanel jPanelResultView;
     private javax.swing.JProgressBar jProgressBar1;
-    private javax.swing.JScrollPane jScrollPaneSearchResults;
+    private javax.swing.JScrollPane jScrollPaneResults;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTextField jTextFieldDirectory;
     private javax.swing.JToolBar jToolBar1;

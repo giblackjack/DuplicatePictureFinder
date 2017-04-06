@@ -108,6 +108,7 @@ public class DuplicatePictureFinder {
     
     public void sendResults(){
         //TODO: filter out single images and only send list of duplicates to the gui for display
+        parentContainer.DisplayResult(HMFiles.values());
     }
     
     public boolean isVisitSubDir() {
