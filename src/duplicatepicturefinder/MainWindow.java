@@ -5,17 +5,12 @@
  */
 package duplicatepicturefinder;
 
-import java.awt.FlowLayout;
-import java.awt.Image;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
+import javax.swing.BoxLayout;
+import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
-import javax.swing.SwingConstants;
 
 /**
  *
@@ -26,14 +21,13 @@ public class MainWindow extends javax.swing.JFrame {
     
     public String BaseDirectory;
     DuplicatePictureFinder appEngine = new DuplicatePictureFinder(this);
-    private int RESULT_SIZE_X = 200;
-    private int RESULT_SIZE_Y = 200;
+    
     /**
      * Creates new form MainWindow
      */
     public MainWindow() {
         initComponents();
-        jPanelResultView.setLayout(new FlowLayout());
+        jPanelResults.setLayout(new BoxLayout(jPanelResults, BoxLayout.Y_AXIS));
     }
 
     /**
@@ -56,15 +50,17 @@ public class MainWindow extends javax.swing.JFrame {
         jComboBoxFileFilter = new javax.swing.JComboBox<>();
         jButtonQuickSearch = new javax.swing.JButton();
         jButtonDeepSearch = new javax.swing.JButton();
-        jScrollPaneResults = new javax.swing.JScrollPane();
-        jPanelResultView = new javax.swing.JPanel();
+        jSplitPane1 = new javax.swing.JSplitPane();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jListResults = new javax.swing.JList<>();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jPanelResults = new javax.swing.JPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenuOptions = new javax.swing.JMenu();
         jMenuHelp = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Duplicate Image Finder");
-        setPreferredSize(new java.awt.Dimension(500, 500));
 
         jToolBar1.setFloatable(false);
         jToolBar1.setRollover(true);
@@ -114,20 +110,25 @@ public class MainWindow extends javax.swing.JFrame {
 
         jButtonDeepSearch.setText("Deep Search");
 
-        jScrollPaneResults.setDoubleBuffered(true);
+        jListResults.setToolTipText("");
+        jScrollPane1.setViewportView(jListResults);
 
-        javax.swing.GroupLayout jPanelResultViewLayout = new javax.swing.GroupLayout(jPanelResultView);
-        jPanelResultView.setLayout(jPanelResultViewLayout);
-        jPanelResultViewLayout.setHorizontalGroup(
-            jPanelResultViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 478, Short.MAX_VALUE)
+        jSplitPane1.setLeftComponent(jScrollPane1);
+
+        javax.swing.GroupLayout jPanelResultsLayout = new javax.swing.GroupLayout(jPanelResults);
+        jPanelResults.setLayout(jPanelResultsLayout);
+        jPanelResultsLayout.setHorizontalGroup(
+            jPanelResultsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 435, Short.MAX_VALUE)
         );
-        jPanelResultViewLayout.setVerticalGroup(
-            jPanelResultViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 361, Short.MAX_VALUE)
+        jPanelResultsLayout.setVerticalGroup(
+            jPanelResultsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 375, Short.MAX_VALUE)
         );
 
-        jScrollPaneResults.setViewportView(jPanelResultView);
+        jScrollPane2.setViewportView(jPanelResults);
+
+        jSplitPane1.setRightComponent(jScrollPane2);
 
         jMenuOptions.setText("Options");
         jMenuBar1.add(jMenuOptions);
@@ -147,24 +148,22 @@ public class MainWindow extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jSeparator1)
                     .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jComboBoxFileFilter, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jTextFieldDirectory, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 231, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPaneResults)
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(jComboBoxFileFilter, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jTextFieldDirectory, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 231, Short.MAX_VALUE))
+                                .addComponent(jButtonSelectDirectory)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jButtonSelectDirectory)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jCheckBoxSubfolders))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jButtonQuickSearch)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jButtonDeepSearch)))
-                                .addGap(0, 0, Short.MAX_VALUE)))
-                        .addContainerGap())))
+                                .addComponent(jCheckBoxSubfolders))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jButtonQuickSearch)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButtonDeepSearch)))
+                        .addGap(0, 49, Short.MAX_VALUE))
+                    .addComponent(jSplitPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -182,7 +181,7 @@ public class MainWindow extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPaneResults)
+                .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 363, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -263,29 +262,16 @@ public class MainWindow extends javax.swing.JFrame {
     }
     
     public void DisplayResult(Collection<ArrayList<String>> fileNames){
-        //TODO: add in user functionality to set size of results (button size)
+        DefaultListModel<String> resultsListModel = new DefaultListModel<>();
         for (ArrayList<String> fileSet : fileNames){
-            System.out.println(fileSet.size());
             if(fileSet.size() == 1) continue;
             for (String name : fileSet){
-                System.out.println(name);
-                ImageIcon tmpIcon = new ImageIcon(name);
-                Image bigImg = tmpIcon.getImage();
-                Image smlImg = bigImg.getScaledInstance((int) (0.9 * RESULT_SIZE_X), (int) (0.9 * RESULT_SIZE_Y), java.awt.Image.SCALE_SMOOTH);
-                tmpIcon.setImage(smlImg);
-                JButton tempButton = new JButton(tmpIcon);
-                tempButton.setIcon(tmpIcon);
-                tempButton.setSize(RESULT_SIZE_X, RESULT_SIZE_Y);
-                tempButton.setToolTipText(name);
-                jPanelResultView.add(tempButton);
+                resultsListModel.addElement(name);                
             }
         }
-        //TODO: need to figure out how to get the program to start a second and subsequent lines of results
-        /*for(int i = 0; i < 20; i++){
-            jPanelResultView.add(new JButton(String.valueOf(i)));
-        }*/
-        jPanelResultView.revalidate();
-        jPanelResultView.repaint();
+        jListResults.setModel(resultsListModel);
+        jListResults.revalidate();
+        jListResults.repaint();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -296,13 +282,16 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JButton jButtonSelectDirectory;
     private javax.swing.JCheckBox jCheckBoxSubfolders;
     private javax.swing.JComboBox<String> jComboBoxFileFilter;
+    private javax.swing.JList<String> jListResults;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenu jMenuHelp;
     private javax.swing.JMenu jMenuOptions;
-    private javax.swing.JPanel jPanelResultView;
+    private javax.swing.JPanel jPanelResults;
     private javax.swing.JProgressBar jProgressBar1;
-    private javax.swing.JScrollPane jScrollPaneResults;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JTextField jTextFieldDirectory;
     private javax.swing.JToolBar jToolBar1;
     // End of variables declaration//GEN-END:variables
