@@ -5,11 +5,16 @@
  */
 package duplicatepicturefinder;
 
+import java.awt.FlowLayout;
+import java.awt.Image;
+import java.util.List;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFileChooser;
 
 /**
@@ -111,19 +116,26 @@ public class MainWindow extends javax.swing.JFrame {
         jButtonDeepSearch.setText("Deep Search");
 
         jListResults.setToolTipText("");
+        jListResults.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                jListResultsValueChanged(evt);
+            }
+        });
         jScrollPane1.setViewportView(jListResults);
 
         jSplitPane1.setLeftComponent(jScrollPane1);
+
+        jScrollPane2.setDoubleBuffered(true);
 
         javax.swing.GroupLayout jPanelResultsLayout = new javax.swing.GroupLayout(jPanelResults);
         jPanelResults.setLayout(jPanelResultsLayout);
         jPanelResultsLayout.setHorizontalGroup(
             jPanelResultsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 435, Short.MAX_VALUE)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
         jPanelResultsLayout.setVerticalGroup(
             jPanelResultsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 375, Short.MAX_VALUE)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
 
         jScrollPane2.setViewportView(jPanelResults);
@@ -208,6 +220,19 @@ public class MainWindow extends javax.swing.JFrame {
         jTextFieldDirectory.setText(BaseDirectory);
         appEngine.setBaseDir(BaseDirectory);
     }//GEN-LAST:event_jButtonSelectDirectoryActionPerformed
+
+    private void jListResultsValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jListResultsValueChanged
+        jPanelResults.removeAll();
+        List<String> values = jListResults.getSelectedValuesList();
+        for(String item : values) {
+            ImageIcon ImageIconTemp = new ImageIcon(item);
+            ImageIconTemp.setImage(ImageIconTemp.getImage().getScaledInstance(200, 200, Image.SCALE_FAST));
+            JButton JButtonTemp = new JButton(ImageIconTemp);
+            jPanelResults.add(JButtonTemp);
+        }
+        jPanelResults.revalidate();
+        jPanelResults.repaint();
+    }//GEN-LAST:event_jListResultsValueChanged
 
     /**
      * @param args the command line arguments
