@@ -16,6 +16,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
+import javax.swing.SwingWorker;
 
 /**
  *
@@ -26,6 +27,35 @@ public class MainWindow extends javax.swing.JFrame {
     
     public String BaseDirectory;
     DuplicatePictureFinder appEngine = new DuplicatePictureFinder(this);
+    
+    private class ImgProcess extends SwingWorker <Void, JButton> {
+        private List<String> values;
+        public ImgProcess (List<String> values){
+            this.values = values;
+        }
+        
+        @Override
+        protected Void doInBackground() {
+            for(String item : values) {
+                ImageIcon ImageIconTemp = new ImageIcon(item);
+                ImageIconTemp.setImage(ImageIconTemp.getImage().getScaledInstance(200, 200, Image.SCALE_FAST));
+                JButton JButtonTemp = new JButton(ImageIconTemp);
+                publish(JButtonTemp);
+            }
+            return null;
+        }
+        
+        @Override
+        public void process(List<JButton> temp){
+            for(JButton JButtonTemp : temp){
+                jPanelResults.add(JButtonTemp);
+            }
+            jPanelResults.revalidate();
+            jPanelResults.repaint();
+        }
+        
+    }
+    
     
     /**
      * Creates new form MainWindow
@@ -224,14 +254,16 @@ public class MainWindow extends javax.swing.JFrame {
     private void jListResultsValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jListResultsValueChanged
         jPanelResults.removeAll();
         List<String> values = jListResults.getSelectedValuesList();
+        ImgProcess ImgProcessBW = new ImgProcess(values);
+        ImgProcessBW.execute();
+        /*
         for(String item : values) {
             ImageIcon ImageIconTemp = new ImageIcon(item);
             ImageIconTemp.setImage(ImageIconTemp.getImage().getScaledInstance(200, 200, Image.SCALE_FAST));
             JButton JButtonTemp = new JButton(ImageIconTemp);
             jPanelResults.add(JButtonTemp);
         }
-        jPanelResults.revalidate();
-        jPanelResults.repaint();
+        */
     }//GEN-LAST:event_jListResultsValueChanged
 
     /**
