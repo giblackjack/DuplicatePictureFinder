@@ -6,6 +6,7 @@
 package duplicatepicturefinder;
 
 import java.io.IOException;
+import java.nio.file.FileVisitOption;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
@@ -15,6 +16,7 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.logging.FileHandler;
@@ -74,7 +76,14 @@ public class DuplicatePictureFinder {
         if (!baseDir.isEmpty() && Files.exists(Paths.get(baseDir), LinkOption.NOFOLLOW_LINKS)){
             try {
                 Path baseDirPath = Paths.get(baseDir);
-                Files.walkFileTree(baseDirPath, new SimpleFileVisitor<Path>(){
+                HMFiles.clear();
+                int fileMaxDepth;
+                if(visitSubDir){
+                    fileMaxDepth = Integer.MAX_VALUE;
+                }else{
+                    fileMaxDepth = 0;
+                }
+                Files.walkFileTree(baseDirPath, EnumSet.noneOf(FileVisitOption.class), fileMaxDepth, new SimpleFileVisitor<Path>(){
                     @Override
                     public FileVisitResult visitFile(Path file, BasicFileAttributes attrs){
                         //TODO: add in option to include/exclude subdirectories - possible?
@@ -106,8 +115,10 @@ public class DuplicatePictureFinder {
         }
     }
     
+    /**
+     * 
+     */
     public void sendResults(){
-        //TODO: filter out single images and only send list of duplicates to the gui for display
         parentContainer.DisplayResult(HMFiles.values());
     }
     

@@ -16,6 +16,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
+import javax.swing.ListModel;
 import javax.swing.SwingWorker;
 
 /**
@@ -233,7 +234,6 @@ public class MainWindow extends javax.swing.JFrame {
 
     private void jCheckBoxSubfoldersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxSubfoldersActionPerformed
         appEngine.setVisitSubDir(jCheckBoxSubfolders.isSelected());
-        System.out.println(jCheckBoxSubfolders.isSelected());
     }//GEN-LAST:event_jCheckBoxSubfoldersActionPerformed
 
     private void jComboBoxFileFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxFileFilterActionPerformed
@@ -256,14 +256,6 @@ public class MainWindow extends javax.swing.JFrame {
         List<String> values = jListResults.getSelectedValuesList();
         ImgProcess ImgProcessBW = new ImgProcess(values);
         ImgProcessBW.execute();
-        /*
-        for(String item : values) {
-            ImageIcon ImageIconTemp = new ImageIcon(item);
-            ImageIconTemp.setImage(ImageIconTemp.getImage().getScaledInstance(200, 200, Image.SCALE_FAST));
-            JButton JButtonTemp = new JButton(ImageIconTemp);
-            jPanelResults.add(JButtonTemp);
-        }
-        */
     }//GEN-LAST:event_jListResultsValueChanged
 
     /**
@@ -323,7 +315,7 @@ public class MainWindow extends javax.swing.JFrame {
         for (ArrayList<String> fileSet : fileNames){
             if(fileSet.size() == 1) continue;
             for (String name : fileSet){
-                resultsListModel.addElement(name);                
+                resultsListModel.addElement(name);
             }
         }
         jListResults.setModel(resultsListModel);
