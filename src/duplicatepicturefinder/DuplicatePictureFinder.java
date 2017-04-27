@@ -6,6 +6,7 @@
 package duplicatepicturefinder;
 
 import java.io.IOException;
+import java.nio.channels.FileChannel;
 import java.nio.file.FileVisitOption;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
@@ -86,8 +87,6 @@ public class DuplicatePictureFinder {
                 Files.walkFileTree(baseDirPath, EnumSet.noneOf(FileVisitOption.class), fileMaxDepth, new SimpleFileVisitor<Path>(){
                     @Override
                     public FileVisitResult visitFile(Path file, BasicFileAttributes attrs){
-                        //TODO: add in option to include/exclude subdirectories - possible?
-                        //TODO: implement deep search functionality into code, refactor to change function name to reflect
                         //TODO: add in code to skip hidden files
                         for (String ext : FileExt){
                             if(file.toString().toLowerCase().endsWith(ext)){
@@ -101,7 +100,7 @@ public class DuplicatePictureFinder {
             } catch (IOException ex) {
                 Logger.getLogger(DuplicatePictureFinder.class.getName()).log(Level.SEVERE, null, ex);
             }
-            sendResults();
+            sendHMResults();
         } 
     }
     
@@ -115,10 +114,42 @@ public class DuplicatePictureFinder {
         }
     }
     
+    public void deepSearchDirectory(){
+        if (!baseDir.isEmpty() && Files.exists(Paths.get(baseDir), LinkOption.NOFOLLOW_LINKS)){
+            try {
+                Path baseDirPath = Paths.get(baseDir);
+                LLFiles.clear();
+                int fileMaxDepth;
+                if(visitSubDir){
+                    fileMaxDepth = Integer.MAX_VALUE;
+                }else{
+                    fileMaxDepth = 0;
+                }
+                Files.walkFileTree(baseDirPath, EnumSet.noneOf(FileVisitOption.class), fileMaxDepth, new SimpleFileVisitor<Path>(){
+                    @Override
+                    public FileVisitResult visitFile(Path file, BasicFileAttributes attrs){
+                        //TODO: implement deep search functionality into code, refactor to change function name to reflect
+                        //TODO: add in code to skip hidden files
+                        for (String ext : FileExt){
+                            if(file.toString().toLowerCase().endsWith(ext)){
+                                LLFiles.add(file.toString());
+                                break;
+                            }
+                        }
+                        return FileVisitResult.CONTINUE;
+                    }
+                });
+            } catch (IOException ex) {
+                Logger.getLogger(DuplicatePictureFinder.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            sendLLResults();
+        } 
+    }
+    
     /**
      * 
      */
-    public void sendResults(){
+    public void sendHMResults(){
         parentContainer.DisplayResult(HMFiles.values());
     }
     
@@ -136,5 +167,9 @@ public class DuplicatePictureFinder {
 
     public void setBaseDir(String baseDir) {
         this.baseDir = baseDir;
+    }
+
+    private void sendLLResults() {
+        
     }
 }

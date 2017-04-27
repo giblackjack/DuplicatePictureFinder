@@ -83,12 +83,12 @@ public class MainWindow extends javax.swing.JFrame {
         jTextFieldDirectory = new javax.swing.JTextField();
         jButtonSelectDirectory = new javax.swing.JButton();
         jCheckBoxSubfolders = new javax.swing.JCheckBox();
-        jComboBoxFileFilter = new javax.swing.JComboBox<>();
+        jComboBoxFileFilter = new javax.swing.JComboBox<String>();
         jButtonQuickSearch = new javax.swing.JButton();
         jButtonDeepSearch = new javax.swing.JButton();
         jSplitPane1 = new javax.swing.JSplitPane();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jListResults = new javax.swing.JList<>();
+        jListResults = new javax.swing.JList<String>();
         jScrollPane2 = new javax.swing.JScrollPane();
         jPanelResults = new javax.swing.JPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
@@ -106,12 +106,22 @@ public class MainWindow extends javax.swing.JFrame {
         jButtonMoveFiles.setFocusable(false);
         jButtonMoveFiles.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButtonMoveFiles.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButtonMoveFiles.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonMoveFilesActionPerformed(evt);
+            }
+        });
         jToolBar1.add(jButtonMoveFiles);
 
         jButtonDeleteFiles.setText("Delete Files");
         jButtonDeleteFiles.setFocusable(false);
         jButtonDeleteFiles.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButtonDeleteFiles.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButtonDeleteFiles.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonDeleteFilesActionPerformed(evt);
+            }
+        });
         jToolBar1.add(jButtonDeleteFiles);
 
         jTextFieldDirectory.setText("Select directory");
@@ -130,7 +140,7 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
 
-        jComboBoxFileFilter.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBoxFileFilter.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         jComboBoxFileFilter.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBoxFileFilterActionPerformed(evt);
@@ -145,6 +155,11 @@ public class MainWindow extends javax.swing.JFrame {
         });
 
         jButtonDeepSearch.setText("Deep Search");
+        jButtonDeepSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonDeepSearchActionPerformed(evt);
+            }
+        });
 
         jListResults.setToolTipText("");
         jListResults.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
@@ -257,6 +272,18 @@ public class MainWindow extends javax.swing.JFrame {
         ImgProcess ImgProcessBW = new ImgProcess(values);
         ImgProcessBW.execute();
     }//GEN-LAST:event_jListResultsValueChanged
+
+    private void jButtonDeepSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDeepSearchActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButtonDeepSearchActionPerformed
+
+    private void jButtonMoveFilesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonMoveFilesActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButtonMoveFilesActionPerformed
+
+    private void jButtonDeleteFilesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDeleteFilesActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButtonDeleteFilesActionPerformed
 
     /**
      * @param args the command line arguments
