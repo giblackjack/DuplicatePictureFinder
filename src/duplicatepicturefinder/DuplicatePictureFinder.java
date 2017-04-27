@@ -6,6 +6,7 @@
 package duplicatepicturefinder;
 
 import java.io.IOException;
+import java.io.FileInputStream;
 import java.nio.channels.FileChannel;
 import java.nio.file.FileVisitOption;
 import java.nio.file.FileVisitResult;
@@ -36,7 +37,8 @@ public class DuplicatePictureFinder {
      */
     boolean visitSubDir = false;
     String baseDir;
-    LinkedList LLFiles;
+    LinkedList<String> LLFiles;
+    LinkedList<String> LLFilesResults;
     HashMap<String, ArrayList<String>> HMFiles;
     ArrayList<String> FileExt;
     
@@ -170,6 +172,39 @@ public class DuplicatePictureFinder {
     }
 
     private void sendLLResults() {
-        
+        boolean filesEqual = false;
+        FileInputStream baseFile;
+        FileInputStream compareFile;
+        byte[512] baseFileBytes;
+        byte[512] compareFileBytes;
+        String baseFileName;
+        String compareFileName;
+        for (int i = 0; i <= LLFiles.size(); i++){
+            baseFileName = LLFiles.pop();
+            baseFile = new FileInputStream(baseFileName);
+            for (compareFileName : LLFiles){
+                compareFile = new FileInputStream(compareFileName);
+                if(baseFile.getChannel().size() != compareFile.getChannel().size()) {
+                    compareFile.close();
+                    filesEqual = false;
+                    continue;
+                }
+                while(baseFile.read(baseFileBytes) != -1 && compareFile.read(compareFileBytes) !=-1){
+                    if(Arrays.equals(baseFileBytes, compareFileBytes)) {
+                        filesEqual = true;
+                        continue;
+                    } else {
+                        filesEqual = false;
+                        break;
+                    }
+                }
+                if(filesEqual){
+                    if(!LLFilesResults.contains(baseFileName)) LLFilesResults.add(baseFileName);
+                    if(!LLFilesResults.contains(compareFileName)) LLFilesResults.add(compareFileName);
+                }
+                compareFile.close();
+            }
+            baseFile.close();
+        }
     }
 }
