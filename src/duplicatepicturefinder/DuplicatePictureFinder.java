@@ -7,7 +7,7 @@ package duplicatepicturefinder;
 
 import java.io.IOException;
 import java.io.FileInputStream;
-import java.nio.channels.FileChannel;
+import java.io.FileNotFoundException;
 import java.nio.file.FileVisitOption;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
@@ -17,10 +17,9 @@ import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -37,8 +36,8 @@ public class DuplicatePictureFinder {
      */
     boolean visitSubDir = false;
     String baseDir;
-    LinkedList<String> LLFiles;
-    LinkedList<String> LLFilesResults;
+    ArrayList<String> ALFiles;
+    ArrayList<String> ALFilesResults;
     HashMap<String, ArrayList<String>> HMFiles;
     ArrayList<String> FileExt;
     
@@ -63,7 +62,8 @@ public class DuplicatePictureFinder {
         FileExt.add(".jpg");
         FileExt.add(".jpeg");
         FileExt.add(".png");
-        LLFiles = new LinkedList();
+        ALFiles = new ArrayList<>();
+        ALFilesResults = new ArrayList<>();
         HMFiles = new HashMap<>();
     }
     
@@ -120,7 +120,7 @@ public class DuplicatePictureFinder {
         if (!baseDir.isEmpty() && Files.exists(Paths.get(baseDir), LinkOption.NOFOLLOW_LINKS)){
             try {
                 Path baseDirPath = Paths.get(baseDir);
-                LLFiles.clear();
+                ALFiles.clear();
                 int fileMaxDepth;
                 if(visitSubDir){
                     fileMaxDepth = Integer.MAX_VALUE;
@@ -134,7 +134,7 @@ public class DuplicatePictureFinder {
                         //TODO: add in code to skip hidden files
                         for (String ext : FileExt){
                             if(file.toString().toLowerCase().endsWith(ext)){
-                                LLFiles.add(file.toString());
+                                ALFiles.add(file.toString());
                                 break;
                             }
                         }
@@ -171,40 +171,65 @@ public class DuplicatePictureFinder {
         this.baseDir = baseDir;
     }
 
+    /*
+    This method contains the bulk of the picture comparing between actual images.
+    */
     private void sendLLResults() {
-        boolean filesEqual = false;
+        boolean filesEqual = true;
         FileInputStream baseFile;
         FileInputStream compareFile;
-        byte[512] baseFileBytes;
-        byte[512] compareFileBytes;
+        byte[] baseFileBytes = new byte[1024];
+        byte[] compareFileBytes = new byte[1024];
         String baseFileName;
         String compareFileName;
-        for (int i = 0; i <= LLFiles.size(); i++){
-            baseFileName = LLFiles.pop();
-            baseFile = new FileInputStream(baseFileName);
-            for (compareFileName : LLFiles){
-                compareFile = new FileInputStream(compareFileName);
-                if(baseFile.getChannel().size() != compareFile.getChannel().size()) {
-                    compareFile.close();
-                    filesEqual = false;
-                    continue;
-                }
-                while(baseFile.read(baseFileBytes) != -1 && compareFile.read(compareFileBytes) !=-1){
-                    if(Arrays.equals(baseFileBytes, compareFileBytes)) {
-                        filesEqual = true;
-                        continue;
-                    } else {
+        parentContainer.jProgressBar1.setMaximum(ALFiles.size()-1);
+        for (int i = 0; i < ALFiles.size(); i++){
+            try {
+                baseFileName = ALFiles.remove(0);
+                parentContainer.jProgressBar1.setValue(i);
+                for (String compareFileNameInternal : ALFiles){
+                    filesEqual = true;
+                    compareFileName = compareFileNameInternal;
+                    baseFile = new FileInputStream(baseFileName);
+                    compareFile = new FileInputStream(compareFileName);
+                    if(baseFile.getChannel().size() != compareFile.getChannel().size()) {
+                        compareFile.close();
                         filesEqual = false;
-                        break;
+                        continue;
                     }
+                    boolean readFiles = true;
+                    int baseFileReadInt = 0;
+                    int compareFileReadInt =0;
+                    while(readFiles){
+                        baseFileReadInt = baseFile.read(baseFileBytes);
+                        compareFileReadInt = compareFile.read(compareFileBytes);
+                        if(baseFileReadInt == -1 || compareFileReadInt == -1){
+                            readFiles = false;
+                            break;
+                        }                        
+                        if(Arrays.equals(baseFileBytes, compareFileBytes)) {
+                            filesEqual = true;
+                        } else {
+                            filesEqual = false;
+                            break;
+                        }
+                    }
+                    if(filesEqual){
+                        if(!ALFilesResults.contains(baseFileName)) ALFilesResults.add(baseFileName);
+                        if(!ALFilesResults.contains(compareFileName)) ALFilesResults.add(compareFileName);
+                    }
+                    baseFile.close();
+                    compareFile.close();
                 }
-                if(filesEqual){
-                    if(!LLFilesResults.contains(baseFileName)) LLFilesResults.add(baseFileName);
-                    if(!LLFilesResults.contains(compareFileName)) LLFilesResults.add(compareFileName);
-                }
-                compareFile.close();
+                
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(DuplicatePictureFinder.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex){
+                Logger.getLogger(DuplicatePictureFinder.class.getName()).log(Level.SEVERE, null, ex);
             }
-            baseFile.close();
+            parentContainer.jProgressBar1.setValue(0);
+            parentContainer.DisplayResult(ALFilesResults);
         }
+        
     }
 }

@@ -48,7 +48,7 @@ public class MainWindow extends javax.swing.JFrame {
         
         @Override
         public void process(List<JButton> temp){
-            for(JButton JButtonTemp : temp){
+            for (JButton JButtonTemp : temp) {
                 jPanelResults.add(JButtonTemp);
             }
             jPanelResults.revalidate();
@@ -63,7 +63,8 @@ public class MainWindow extends javax.swing.JFrame {
      */
     public MainWindow() {
         initComponents();
-        jPanelResults.setLayout(new BoxLayout(jPanelResults, BoxLayout.Y_AXIS));
+        //jPanelResults.setLayout(new BoxLayout(jPanelResults, BoxLayout.Y_AXIS));
+        jPanelResults.setLayout(new FlowLayout());
     }
 
     /**
@@ -74,6 +75,7 @@ public class MainWindow extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
         jToolBar1 = new javax.swing.JToolBar();
         jProgressBar1 = new javax.swing.JProgressBar();
@@ -83,12 +85,12 @@ public class MainWindow extends javax.swing.JFrame {
         jTextFieldDirectory = new javax.swing.JTextField();
         jButtonSelectDirectory = new javax.swing.JButton();
         jCheckBoxSubfolders = new javax.swing.JCheckBox();
-        jComboBoxFileFilter = new javax.swing.JComboBox<String>();
+        jComboBoxFileFilter = new javax.swing.JComboBox<>();
         jButtonQuickSearch = new javax.swing.JButton();
         jButtonDeepSearch = new javax.swing.JButton();
         jSplitPane1 = new javax.swing.JSplitPane();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jListResults = new javax.swing.JList<String>();
+        jListResults = new javax.swing.JList<>();
         jScrollPane2 = new javax.swing.JScrollPane();
         jPanelResults = new javax.swing.JPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
@@ -140,7 +142,7 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
 
-        jComboBoxFileFilter.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBoxFileFilter.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         jComboBoxFileFilter.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBoxFileFilterActionPerformed(evt);
@@ -172,6 +174,9 @@ public class MainWindow extends javax.swing.JFrame {
         jSplitPane1.setLeftComponent(jScrollPane1);
 
         jScrollPane2.setDoubleBuffered(true);
+
+        org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, jScrollPane2, org.jdesktop.beansbinding.ELProperty.create("${maximumSize}"), jPanelResults, org.jdesktop.beansbinding.BeanProperty.create("maximumSize"));
+        bindingGroup.addBinding(binding);
 
         javax.swing.GroupLayout jPanelResultsLayout = new javax.swing.GroupLayout(jPanelResults);
         jPanelResults.setLayout(jPanelResultsLayout);
@@ -244,6 +249,8 @@ public class MainWindow extends javax.swing.JFrame {
                 .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
+        bindingGroup.bind();
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -267,14 +274,16 @@ public class MainWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonSelectDirectoryActionPerformed
 
     private void jListResultsValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jListResultsValueChanged
-        jPanelResults.removeAll();
-        List<String> values = jListResults.getSelectedValuesList();
-        ImgProcess ImgProcessBW = new ImgProcess(values);
-        ImgProcessBW.execute();
+        if(!jListResults.getValueIsAdjusting()){
+            jPanelResults.removeAll();
+            List<String> values = jListResults.getSelectedValuesList();
+            ImgProcess ImgProcessBW = new ImgProcess(values);
+            ImgProcessBW.execute();
+        }
     }//GEN-LAST:event_jListResultsValueChanged
 
     private void jButtonDeepSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDeepSearchActionPerformed
-        // TODO add your handling code here:
+        appEngine.deepSearchDirectory();
     }//GEN-LAST:event_jButtonDeepSearchActionPerformed
 
     private void jButtonMoveFilesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonMoveFilesActionPerformed
@@ -349,6 +358,16 @@ public class MainWindow extends javax.swing.JFrame {
         jListResults.revalidate();
         jListResults.repaint();
     }
+    
+    void DisplayResult(ArrayList<String> ALFilesResults) {
+        DefaultListModel<String> resultsListModel = new DefaultListModel<>();
+        for (String files : ALFilesResults){
+            resultsListModel.addElement(files);            
+        }
+        jListResults.setModel(resultsListModel);
+        jListResults.revalidate();
+        jListResults.repaint();
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonDeepSearch;
@@ -363,12 +382,13 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JMenu jMenuHelp;
     private javax.swing.JMenu jMenuOptions;
     private javax.swing.JPanel jPanelResults;
-    private javax.swing.JProgressBar jProgressBar1;
+    protected javax.swing.JProgressBar jProgressBar1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JTextField jTextFieldDirectory;
     private javax.swing.JToolBar jToolBar1;
+    private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 }
