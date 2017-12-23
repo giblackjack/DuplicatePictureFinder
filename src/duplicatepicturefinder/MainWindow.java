@@ -22,6 +22,7 @@ import javax.swing.SwingWorker;
 /**
  *
  * @author STIVY
+ * TODO: set max horizontal size for image/button display to size of current area to allow vertical scrolling only.
  */
 public class MainWindow extends javax.swing.JFrame {
 
@@ -29,6 +30,9 @@ public class MainWindow extends javax.swing.JFrame {
     public String BaseDirectory;
     DuplicatePictureFinder appEngine = new DuplicatePictureFinder(this);
     
+    /**
+     * TODO: add method to interrupt and/or stop processing of pictures in event of large number of pictures selected.
+     */
     private class ImgProcess extends SwingWorker <Void, JButton> {
         private List<String> values;
         public ImgProcess (List<String> values){
@@ -274,6 +278,7 @@ public class MainWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonSelectDirectoryActionPerformed
 
     private void jListResultsValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jListResultsValueChanged
+        //TODO: pull ImgProcess object out of method to allow interruption of worker thread
         if(!jListResults.getValueIsAdjusting()){
             jPanelResults.removeAll();
             List<String> values = jListResults.getSelectedValuesList();
